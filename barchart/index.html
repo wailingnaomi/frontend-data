@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Barchart kleur</title>
 
+    <link rel="stylesheet" href="style.css">
+
     <script src="https://unpkg.com/d3@6.2.0/dist/d3.min.js"></script>
 </head>
 <body>
@@ -15,9 +17,10 @@
         <p>Het gaat om auto's die geregistreerd zijn vanaf de eerste toelating in Nederland, het eerste jaar is 1944</p>    
     </div>
     <div>
-        <input type="checkbox" id='filter' name='filter'>
+        <input type="checkbox" id='filter' name='filter'> Laat de auto merken zien
     </div>
-    <svg width="960" height="600"></svg>
-    <script src="index.js"></script>
+    <div id="chart-container">
+    </div>
+    <script src="index2.js"></script>
 </body>
 </html>

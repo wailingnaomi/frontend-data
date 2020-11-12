@@ -5,69 +5,91 @@ const colorColumn = 'kleur'
 const brandColumn = 'merk'
 
 //array's voor de barchart
-let data
 let allColors
 let allBrands
 
-// settings voor de barchart, de + zet strings om naar nummers
-const svg = d3.select('svg');
-const width = +svg.attr('width');
-const height = +svg.attr('height');
+// settings voor de barchart
+const chartContainer = d3.select('#chart-container');
+const width = 960;
+const height = 600;
 const margin = {
-    top: 100,
+    top: 20,
     right: 40,
-    bottom: 20,
+    bottom: 200,
     left: 100
 };
 const innerWidth = width - margin.left - margin.right;
 const innerHeight = height - margin.top - margin.bottom;
 
 //x en de y schalen
-let xscale = d3.scaleBand().padding(0.5); //scaleBand is voor de bars
-let yscale = d3.scaleLinear()
+let xScale = d3.scaleBand().padding(0.5); //scaleBand is voor de bars
+let yScale = d3.scaleLinear()
 
+//x-as en y-as keys en values meegegeven
 const xValue = d => d.key;
 const yValue = d => d.value;
 
-//groep element g maken
-let g = svg
-    .append('g')
-    .attr('transform', `translate(${margin.left}, ${margin.top})`)
-
-
 const render = data => {
-    //setup x schaal
-    xscale.domain(data.map(xValue)) // loop door xValue voor de keys
-    xscale.range([0, innerWidth]) //breedte van de x-as
+    //svg maken in chartContainer
+    const svg = chartContainer
+        .append('svg')
+        .attr('width', width)
+        .attr('height', height)
 
-    //setup y schaal
-    yscale.domain([0, d3.max(data, yValue)]) //minimum en maximum voor de domain
-    yscale.range([innerHeight, 0]) //hoogte van de y-as
+    //groep maken in svg
+    let g = svg
+        .append('g')
+        .attr('transform', `translate(${margin.left}, ${margin.top})`)
 
-    //setup x as
+    //opzetten van x schaal
+    xScale.domain(data.map(xValue)) // loop door xValue voor de keys
+    xScale.range([0, innerWidth]) //breedte van de x-as
+
+    //opzetten van y schaal
+    yScale.domain([0, d3.max(data, yValue)]) //minimum en maximum voor de domain
+    yScale.range([innerHeight, 0]) //hoogte van de y-as
+
+    //opzetten van x as
     g.append('g')
         .attr("class", "axis-x")
-        .call(d3.axisBottom(xscale))
-        .attr('transform', `translate(0, ${innerHeight})`);
+        .call(d3.axisBottom(xScale))
+        .attr('transform', `translate(0, ${innerHeight})`)
+        
+        //https://www.youtube.com/watch?v=c3MCROTNN8g&t=419s
+        .append("text")
+            .attr("y", "-810")
+            .attr("x", "0")
+            .attr("fill", "black")
+            .text('KENMERK')
 
-    //setup y as
+    //https://vizhub.com/Razpudding/c2a9c9b4fde84816931c404951c79873?edit=files&file=index.js
+    g.selectAll(".ticks, text")
+        .attr("class", "keynames")
+        .attr("text-anchor", "start")
+        .attr("transform", "rotate(90)")
+        .attr("dx", 20)
+        .attr("dy", "-0.5em")
+
+
+    //opzetten van y as
     g.append('g')
-    .attr("class", "axis-y")
-        .call(d3.axisLeft(yscale)
+        .attr("class", "axis-y")
+        .call(d3.axisLeft(yScale)
             .ticks(10));
 
     //bars maken
     g.selectAll('rect')
         .data(data)
-        .enter() // maakt bars voor elke rij
+        .enter() //maakt bars voor elke rij
         .append('rect')
-        .attr('x', d => xscale(xValue(d))) // berekend de x attributes
-        .attr('y', d => yscale(yValue(d))) // berekend de y attributes
-        .attr('width', xscale.bandwidth())
-        .attr('height', d => innerHeight - yscale(yValue(d)))
+        .attr('x', d => xScale(xValue(d))) //berekend de x attributes
+        .attr('y', d => yScale(yValue(d))) //berekend de y attributes
+        .attr('width', xScale.bandwidth()) //geeft de breedte mee van een bar
+        .attr('height', d => innerHeight - yScale(yValue(d))) //geeft de hoogte mee van een bar
 
 }
 
+//data ophalen van endpoint
 d3.json(endpoint).then(data => {
     console.log("ruwe data", data)
 
@@ -102,13 +124,14 @@ d3.json(endpoint).then(data => {
     allBrands = newArray(amountBrands)
     console.log("transformeren part 2: alle merken in nieuwe array", allBrands)
 
-    render(allColors)
-    setupInput()
+    render(allColors) //render de kleuren array in de barchart
+    setupInput() //check of de input is geselecteerd
 })
 
-//Geeft een nieuwe data array waar alleen personenauto wordt weergegeven 
+//Geeft een nieuwe data array waar alleen personenauto wordt weergegeven
 function autos(dataArr, specificValue) {
     //sjors heeft mij geholpen met deze regel
+    //filter door voertuigsoort heen en check of de waarde klopt
     return dataArr.filter((item) => item["voertuigsoort"] == specificValue)
 }
 
@@ -116,8 +139,8 @@ function autos(dataArr, specificValue) {
 function transformData(dataArr) {
     const leanData = dataArr.map(item => {
         return {
-            kleur: item.eerste_kleur,
-            merk: item.merk
+            kleur: item.eerste_kleur.toLowerCase(),
+            merk: item.merk.toLowerCase()
         }
     })
     //data filteren naar kleur en merk
@@ -144,14 +167,12 @@ function countUnique(dataArr) {
 
 //https://stackoverflow.com/questions/36411566/how-to-transpose-a-javascript-object-into-a-key-value-array
 function newArray(dataArr) {
+    //array maken met per item een object
     return Object.entries(dataArr).map(([key, value]) => ({
         key,
         value
     }));
 }
-
-
-
 
 function setupInput() {
     const input = d3.select('#filter')
@@ -160,59 +181,15 @@ function setupInput() {
 }
 
 function update() {
-    // var test = this.value //"merk"
-
     //check of filter aan staat
     const filterOn = this ? this.checked : false
-    console.log(filterOn)
 
     //geef de data terug die is geselecteerd
-    const dataSelection = filterOn ? allBrands.filter(brand => brand.key) : allColors
-    console.log(dataSelection)
+    const dataSelection = filterOn ? allBrands : allColors
 
-    //update x domain
-    xscale.domain(allBrands.map(brand => brand.key)).padding(0.5)
-    // console.log(xscale.domain())
+    //schoonbroer heeft mij hierbij geholpen
 
-    //update y domain
-    yscale.domain([0, d3.max(allColors, yValue)])
-    // console.log(yscale.domain())
+    chartContainer.select('svg').remove(); //door de chart helemaal te verwijderen 
+    render(dataSelection) //herbruik ik de functie render, om een nieuwe barchart te maken
 
-    //bars maken
-    const bars = g.selectAll('rect')
-        .data(dataSelection)
-
-    //update
-    bars
-        .attr('x', d => xscale(xValue(d))) // berekend de x attributes
-        .attr('y', d => yscale(yValue(d))) // berekend de y attributes
-        .attr('width', xscale.bandwidth())
-        .attr('height', d => innerHeight - yscale(yValue(d)))
-
-
-    //maakt bars voor elke rij
-    bars.enter()
-        .append('rect')
-        .attr('x', d => xscale(xValue(d))) // berekend de x attributes
-        .attr('y', d => yscale(yValue(d))) // berekend de y attributes
-        .attr('width', xscale.bandwidth())
-        .attr('height', d => innerHeight - yscale(yValue(d)))
-
-
-    bars.exit()
-        .remove()
-
-
-    //update y as
-    g.select('axis-y')
-        .call(d3.axisLeft(yscale)
-            .ticks(10));
-
-
-    // update x as
-    g.select('axis-x').call(d3.axisBottom(xscale))
-        .selectAll("text")
-        .attr("transform", "rotate(90)")
-        .attr("dx", "55")
-        .attr("dy", "-1em");
 }
