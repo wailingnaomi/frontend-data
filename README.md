@@ -10,7 +10,7 @@ Voor dit project werken we samen met de Volkskrant. De Volkskrant is een Nederla
 Het doel is om interessante relaties te vinden in de datasets zodat de journalisten van de Volkskrant hier artikelen over kan schrijven. Wij verzamelen, analyseren en uiteindelijk visualiseren we de data op een manier dat de journalisten het kunnen gebruiken.
 
 # Concept
-Een leuk thema/onderwerp waar ik verder mee wil werken is wat voor populaire kenmerken personenauto's hebben. In de wiki kun je [uitgebreid lezen over het proces](https://github.com/wailingnaomi/functional-programming/wiki/Concept-proces) van het ontwikkelen ervan en [mijn definitief concept](https://github.com/wailingnaomi/frontend-data/wiki/Definitief-concept). Helaas ben ik er niet aan toe gekomen om alle 4 de kenmerken in de visualisatie te verwerken.
+Een leuk thema/onderwerp waar ik verder mee wil werken is wat voor populaire kenmerken personenauto's hebben. In de wiki kun je [uitgebreid lezen over het proces](https://github.com/wailingnaomi/functional-programming/wiki/Concept-proces) van het ontwikkelen ervan en [mijn definitief concept](https://github.com/wailingnaomi/frontend-data/wiki/Definitief-concept). Helaas is het mij niet gelukt om mijn heel concept te visualiseren.
 
 ### Hoofdvraag
 Zijn er verschillende populaire kenmerken onder personenauto's?
