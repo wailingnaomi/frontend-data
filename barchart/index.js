@@ -160,8 +160,6 @@ function setupInput() {
 }
 
 function update() {
-    // var test = this.value //"merk"
-
     //check of filter aan staat
     const filterOn = this ? this.checked : false
     console.log(filterOn)

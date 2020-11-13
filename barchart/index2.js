@@ -1,5 +1,5 @@
-// Endpoint geeft de dataset GEKENTEKENDE VOERTUIGEN: https://opendata.rdw.nl/Voertuigen/Open-Data-RDW-Gekentekende_voertuigen/m9d7-ebf2
-//Data selecteren die ik gebruik
+//Endpoint geeft de dataset GEKENTEKENDE VOERTUIGEN: https://opendata.rdw.nl/Voertuigen/Open-Data-RDW-Gekentekende_voertuigen/m9d7-ebf2
+//data selecteren die ik gebruik
 const endpoint = 'https://opendata.rdw.nl/resource/m9d7-ebf2.json'
 const colorColumn = 'kleur'
 const brandColumn = 'merk'
@@ -8,7 +8,7 @@ const brandColumn = 'merk'
 let allColors
 let allBrands
 
-// settings voor de barchart
+//settings voor de barchart
 const chartContainer = d3.select('#chart-container');
 const width = 960;
 const height = 600;
@@ -42,7 +42,7 @@ const render = data => {
         .attr('transform', `translate(${margin.left}, ${margin.top})`)
 
     //opzetten van x schaal
-    xScale.domain(data.map(xValue)) // loop door xValue voor de keys
+    xScale.domain(data.map(xValue)) //loop door xValue voor de keys
     xScale.range([0, innerWidth]) //breedte van de x-as
 
     //opzetten van y schaal
@@ -175,9 +175,8 @@ function newArray(dataArr) {
 }
 
 function setupInput() {
-    const input = d3.select('#filter')
-        .on("click", update)
-    // console.log("this is clicked", input)
+    const input = d3.select('#filter') //input field selecteren
+        .on("click", update) //klik functie geven
 }
 
 function update() {
@@ -188,7 +187,6 @@ function update() {
     const dataSelection = filterOn ? allBrands : allColors
 
     //schoonbroer heeft mij hierbij geholpen
-
     chartContainer.select('svg').remove(); //door de chart helemaal te verwijderen 
     render(dataSelection) //herbruik ik de functie render, om een nieuwe barchart te maken
 
