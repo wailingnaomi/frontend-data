@@ -10,13 +10,13 @@ let allBrands
 
 //settings voor de barchart
 const chartContainer = d3.select('#chart-container');
-const width = 960;
-const height = 600;
+const width = 800;
+const height = 650;
 const margin = {
-    top: 20,
+    top: 50,
     right: 40,
     bottom: 200,
-    left: 100
+    left: 75
 };
 const innerWidth = width - margin.left - margin.right;
 const innerHeight = height - margin.top - margin.bottom;
@@ -54,28 +54,39 @@ const render = data => {
         .attr("class", "axis-x")
         .call(d3.axisBottom(xScale))
         .attr('transform', `translate(0, ${innerHeight})`)
-        
-        //https://www.youtube.com/watch?v=c3MCROTNN8g&t=419s
-        .append("text")
-            .attr("y", "-810")
-            .attr("x", "0")
-            .attr("fill", "black")
-            .text('KENMERK')
 
+    // x as text omdraaien
     //https://vizhub.com/Razpudding/c2a9c9b4fde84816931c404951c79873?edit=files&file=index.js
     g.selectAll(".ticks, text")
-        .attr("class", "keynames")
         .attr("text-anchor", "start")
         .attr("transform", "rotate(90)")
         .attr("dx", 20)
         .attr("dy", "-0.5em")
-
+    
+    // text label van x as
+    //https://www.youtube.com/watch?v=c3MCROTNN8g&t=419s
+    g.append("text")
+        .attr("transform", `translate(0, ${innerHeight})`)
+        .attr("y", "100")
+        .attr("x", "312")
+        .text("KENMERK");
 
     //opzetten van y as
     g.append('g')
         .attr("class", "axis-y")
         .call(d3.axisLeft(yScale)
             .ticks(10));
+
+
+
+    //text label voor de y as
+    g.append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y","-50")
+        .attr("x", "-220")
+        // .style("text-anchor", "middle")
+        .text("AANTAL");
+
 
     //bars maken
     g.selectAll('rect')

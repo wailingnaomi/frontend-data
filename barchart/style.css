@@ -1,0 +1,13 @@
+body{
+    font-family: montserrat;
+    max-width: 50em;
+    margin: 0 auto;
+}
+
+h1{
+    text-align: center;
+}
+
+h2{
+    font-weight: 600;
+}
